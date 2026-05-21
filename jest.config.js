@@ -1,4 +1,5 @@
 module.exports = {
+  displayName: 'sho-team-be',
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
   testRegex: '.*\\.(spec|test)\\.ts$',
