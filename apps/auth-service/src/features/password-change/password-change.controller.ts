@@ -3,10 +3,10 @@ import {
   InvalidPasswordChangeRequestError,
   PasswordChangeDependencyUnavailableError,
 } from './password-change.errors';
+import { isValidEmailAddress } from '../../../../../libs/common/src';
 import { PasswordChangeService } from './password-change.service';
 import { PasswordChangeRequest, PasswordChangeResponse } from './password-change.types';
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -38,7 +38,7 @@ export class PasswordChangeController {
     if (
       !UUID_PATTERN.test(body.userId ?? '') ||
       !email ||
-      !EMAIL_PATTERN.test(email) ||
+      !isValidEmailAddress(email) ||
       !body.currentPassword ||
       !body.newPassword ||
       body.newPassword.length < 8 ||
