@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { isValidEmailAddress } from '../../../../../libs/common/src';
 import { AuthServiceClient } from '../current-user/clients/auth-service.client';
 import { CatalogServiceClient } from '../current-user/clients/catalog-service.client';
 import { UserServiceClient } from '../current-user/clients/user-service.client';
@@ -29,6 +28,8 @@ import {
   RegisterAccountRequest,
   RegisteredAccountResponse,
 } from './registration.types';
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 @Injectable()
 export class RegistrationGatewayService {
@@ -178,7 +179,7 @@ export class RegistrationGatewayService {
     const email = input.email?.trim() ?? '';
     if (
       !email ||
-      !isValidEmailAddress(email) ||
+      !EMAIL_PATTERN.test(email) ||
       !input.password ||
       input.password.length < 8 ||
       !input.fullName?.trim() ||
@@ -194,7 +195,7 @@ export class RegistrationGatewayService {
 
   private validatePasswordReset(input: PasswordResetRequest): void {
     const email = input.email?.trim() ?? '';
-    if (!email || !isValidEmailAddress(email)) {
+    if (!email || !EMAIL_PATTERN.test(email)) {
       throw new InvalidPasswordResetRequestError();
     }
 

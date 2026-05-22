@@ -3,9 +3,10 @@ import {
   InvalidRegistrationRequestError,
   RegistrationConflictError,
 } from '../registration/registration.errors';
-import { isValidEmailAddress } from '../../../../../libs/common/src';
 import { RegistrationService } from '../registration/registration.service';
 import { RegisteredUserResponse } from '../registration/registration.types';
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface CreateAdminUserBody {
   email?: string;
@@ -42,7 +43,7 @@ export class AdminUserController {
     const email = body?.email?.trim() ?? '';
     if (
       !email ||
-      !isValidEmailAddress(email) ||
+      !EMAIL_PATTERN.test(email) ||
       !body?.password ||
       body.password.length < 8 ||
       !body.fullName?.trim()

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { createApicenterClient, isValidEmailAddress } from '../../../../../libs/common/src';
+import { createApicenterClient } from '../../../../../libs/common/src';
 import {
   InvalidSharedMessagingRequestError,
   SharedMessagingDependencyUnavailableError,
@@ -11,6 +11,8 @@ import {
   SharedSmsSendRequest,
 } from './shared-messaging.types';
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 @Injectable()
 export class SharedMessagingService {
   async sendEmail(
@@ -21,7 +23,7 @@ export class SharedMessagingService {
         email: recipient.email?.trim().toLowerCase(),
         name: recipient.name?.trim() || undefined,
       }))
-      .filter((recipient) => isValidEmailAddress(recipient.email));
+      .filter((recipient) => EMAIL_PATTERN.test(recipient.email));
 
     if (
       !to?.length ||

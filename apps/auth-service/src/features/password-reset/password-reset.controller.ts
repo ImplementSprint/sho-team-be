@@ -3,9 +3,10 @@ import {
   InvalidPasswordResetRequestError,
   PasswordResetDependencyUnavailableError,
 } from './password-reset.errors';
-import { isValidEmailAddress } from '../../../../../libs/common/src';
 import { PasswordResetService } from './password-reset.service';
 import { PasswordResetRequest, PasswordResetResponse } from './password-reset.types';
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 @Controller('internal/auth/password-reset')
 export class PasswordResetController {
@@ -30,7 +31,7 @@ export class PasswordResetController {
 
   private validate(body: PasswordResetRequest): void {
     const email = body.email?.trim() ?? '';
-    if (!email || !isValidEmailAddress(email)) {
+    if (!email || !EMAIL_PATTERN.test(email)) {
       throw new InvalidPasswordResetRequestError();
     }
 

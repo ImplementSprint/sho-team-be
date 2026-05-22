@@ -11,7 +11,6 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import { isValidEmailAddress } from '../../../../../libs/common/src';
 import { AdminAuditGatewayService } from './admin-audit.service';
 import { AuthTokenService } from '../current-user/auth-token.service';
 import { CurrentUserService } from '../current-user/current-user.service';
@@ -39,6 +38,7 @@ import {
 const validUserStatuses = new Set(['active', 'suspended', 'inactive']);
 const validUserRoles = new Set(['customer', 'provider', 'admin']);
 const validAdminAccessRoles = new Set<AdminAccessRoleId>(adminAccessRoleIds);
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type AuditRequest = { headers?: Record<string, string | string[] | undefined>; socket?: { remoteAddress?: string } };
 
@@ -230,7 +230,7 @@ export class AdminUsersController {
     const fullName = body?.fullName?.trim() ?? '';
     if (
       !email ||
-      !isValidEmailAddress(email) ||
+      !EMAIL_PATTERN.test(email) ||
       !body?.password ||
       body.password.length < 8 ||
       !fullName

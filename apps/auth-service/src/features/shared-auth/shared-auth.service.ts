@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { createApicenterClient, isValidEmailAddress } from '../../../../../libs/common/src';
+import { createApicenterClient } from '../../../../../libs/common/src';
 import {
   InvalidSharedAuthRequestError,
   SharedAuthDependencyUnavailableError,
@@ -19,6 +19,8 @@ import {
   OtpVerifyResponse,
 } from './shared-auth.types';
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 @Injectable()
 export class SharedAuthService {
   async generateOtp(input: OtpGenerateRequest): Promise<OtpGenerateResponse> {
@@ -26,7 +28,7 @@ export class SharedAuthService {
     if (
       !target ||
       !['sms', 'email'].includes(input.channel) ||
-      (input.channel === 'email' && !isValidEmailAddress(target)) ||
+      (input.channel === 'email' && !EMAIL_PATTERN.test(target)) ||
       (input.length !== undefined &&
         (!Number.isInteger(input.length) || input.length < 4 || input.length > 10)) ||
       (input.expiresInSeconds !== undefined &&
