@@ -55,6 +55,25 @@ describe('RateLimitMiddleware', () => {
     expect(next).toHaveBeenCalledTimes(1);
     expect(response.status).not.toHaveBeenCalled();
   });
+
+  it('skips central Render health checks', () => {
+    const middleware = new RateLimitMiddleware(
+      configService({
+        API_GATEWAY_RATE_LIMIT_MAX: '0',
+      }),
+    );
+    const next = jest.fn();
+    const response = responseMock();
+
+    middleware.use(
+      { path: '/api/v1/health', headers: {}, socket: {} } as never,
+      response as never,
+      next,
+    );
+
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(response.status).not.toHaveBeenCalled();
+  });
 });
 
 function configService(values: Record<string, string>): ConfigService {

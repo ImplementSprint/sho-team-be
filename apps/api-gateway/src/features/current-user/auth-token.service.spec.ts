@@ -2,6 +2,19 @@ import { AuthRequiredError, InvalidAuthTokenError } from './current-user.errors'
 import { AuthTokenService } from './auth-token.service';
 
 describe('AuthTokenService', () => {
+  it('does not require Supabase env vars until authentication is attempted', () => {
+    const originalSupabaseUrl = process.env.SUPABASE_URL;
+    const originalSupabasePublishableKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+    delete process.env.SUPABASE_URL;
+    delete process.env.SUPABASE_PUBLISHABLE_KEY;
+
+    expect(() => new AuthTokenService()).not.toThrow();
+
+    restoreEnv('SUPABASE_URL', originalSupabaseUrl);
+    restoreEnv('SUPABASE_PUBLISHABLE_KEY', originalSupabasePublishableKey);
+  });
+
   it('returns the Supabase user id for a valid bearer token', async () => {
     const service = new AuthTokenService({
       auth: {
@@ -74,3 +87,12 @@ describe('AuthTokenService', () => {
     );
   });
 });
+
+function restoreEnv(key: string, value: string | undefined): void {
+  if (value === undefined) {
+    delete process.env[key];
+    return;
+  }
+
+  process.env[key] = value;
+}

@@ -7,6 +7,9 @@ describe('createHealthResponse', () => {
     expect(createHealthResponse('api-gateway', now)).toEqual({
       service: 'api-gateway',
       status: 'ok',
+      checks: {
+        apiCenter: true,
+      },
       timestamp: '2026-05-15T00:00:00.000Z',
     });
   });
