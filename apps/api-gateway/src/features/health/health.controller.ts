@@ -3,8 +3,13 @@ import { createHealthResponse, HealthResponse } from '../../../../../libs/common
 
 const SERVICE_NAME = 'api-gateway';
 
-@Controller('health')
+@Controller(['health', 'api/v1/health'])
 export class HealthController {
+  @Get()
+  root(): HealthResponse {
+    return createHealthResponse(SERVICE_NAME);
+  }
+
   @Get('live')
   live(): HealthResponse {
     return createHealthResponse(SERVICE_NAME);

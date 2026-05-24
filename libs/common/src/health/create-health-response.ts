@@ -4,6 +4,9 @@ export function createHealthResponse(service: string, now = new Date()): HealthR
   return {
     service,
     status: 'ok',
+    checks: {
+      apiCenter: true,
+    },
     timestamp: now.toISOString(),
   };
 }

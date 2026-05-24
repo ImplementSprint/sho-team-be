@@ -17,11 +17,15 @@ interface SupabaseAuthClient {
 
 @Injectable()
 export class AuthTokenService {
-  readonly authClient: SupabaseAuthClient;
+  private client?: SupabaseAuthClient;
 
   constructor(authClient?: SupabaseAuthClient) {
-    this.authClient =
-      authClient ?? (createSupabaseAuthClient() as unknown as SupabaseAuthClient);
+    this.client = authClient;
+  }
+
+  get authClient(): SupabaseAuthClient {
+    this.client ??= createSupabaseAuthClient() as unknown as SupabaseAuthClient;
+    return this.client;
   }
 
   async authenticate(authorization?: string): Promise<string> {

@@ -67,7 +67,9 @@ export class RateLimitMiddleware implements NestMiddleware {
   }
 
   private isHealthCheck(request: Request): boolean {
-    return (request.path || request.url || '').startsWith('/health');
+    const path = request.path || request.url || '';
+
+    return path.startsWith('/health') || path.startsWith('/api/v1/health');
   }
 
   private clientKey(request: Request): string {
