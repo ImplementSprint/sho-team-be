@@ -19,6 +19,6 @@
       "@servease/common/*": ["libs/common/src/*"]
     }
   },
-  "include": ["apps/**/*.ts", "libs/**/*.ts"],
+  "include": ["main.ts", "apps/**/*.ts", "libs/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
